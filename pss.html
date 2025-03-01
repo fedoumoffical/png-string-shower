@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG/JPG Base64 Конвертер</title>
+</head>
+<body>
+    <h2>PNG/JPG → Base64</h2>
+    <input type="file" id="fileInput" accept="image/png, image/jpeg">
+    <textarea id="base64Output" rows="5" cols="50" placeholder="Base64 код тут"></textarea>
+    <button onclick="copyBase64()">Копировать</button>
+
+    <h2>Base64 → PNG/JPG</h2>
+    <textarea id="base64Input" rows="5" cols="50" placeholder="Вставь Base64 код"></textarea>
+    <button onclick="decodeBase64()">Показать картинку</button>
+    <br>
+    <img id="outputImage" style="max-width: 300px; display: none;">
+    <br>
+    <button id="downloadBtn" style="display: none;" onclick="downloadImage()">Скачать картинку</button>
+
+    <script>
+        // PNG/JPG → Base64
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('base64Output').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Base64 → PNG/JPG
+        function decodeBase64() {
+            let base64 = document.getElementById('base64Input').value;
+            let img = document.getElementById('outputImage');
+            let downloadBtn = document.getElementById('downloadBtn');
+
+            img.src = base64;
+            img.style.display = "block";
+            downloadBtn.style.display = "block";
+        }
+
+        // Копирование base64
+        function copyBase64() {
+            let textArea = document.getElementById('base64Output');
+            textArea.select();
+            document.execCommand("copy");
+            alert("Base64 скопирован!");
+        }
+
+        // Скачать картинку
+        function downloadImage() {
+            let img = document.getElementById('outputImage');
+            let link = document.createElement('a');
+            link.href = img.src;
+            link.download = "decoded_image.png"; // Или .jpg, если нужно
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
