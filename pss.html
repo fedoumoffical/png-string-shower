@@ -10,6 +10,7 @@
     <input type="file" id="fileInput" accept="image/png, image/jpeg">
     <textarea id="base64Output" rows="5" cols="50" placeholder="Base64 код тут"></textarea>
     <button onclick="copyBase64()">Копировать</button>
+    <button onclick="saveBase64ToFile()">Сохранить в файл</button>
 
     <h2>Base64 → PNG/JPG</h2>
     <textarea id="base64Input" rows="5" cols="50" placeholder="Вставь Base64 код"></textarea>
@@ -56,6 +57,22 @@
             let link = document.createElement('a');
             link.href = img.src;
             link.download = "decoded_image.png"; // Или .jpg, если нужно
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Сохранить Base64 в файл
+        function saveBase64ToFile() {
+            let base64 = document.getElementById('base64Output').value;
+            if (!base64) {
+                alert("Нет данных для сохранения!");
+                return;
+            }
+            let blob = new Blob([base64], { type: "text/plain" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "base64_image.txt";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
